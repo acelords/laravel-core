@@ -388,7 +388,7 @@ if (! function_exists('authorize'))
             $handler = Config::get("laratrust.middleware.handlers.abort");
             $defaultMessage = 'User does not have any of the necessary access rights.';
 
-            $message = "[CODE: " . $permissionOrRole . "]";
+            $message = "[CODE: " . is_array($permissionOrRole) ? json_encode($permissionOrRole) : $permissionOrRole . "]";
             $message .= $handler['message'] ?? $defaultMessage;
 
             return App::abort($handler['code'], $message);
