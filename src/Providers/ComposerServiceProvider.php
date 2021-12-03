@@ -4,12 +4,9 @@ namespace AceLords\Core\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use AceLords\Core\Library\SiteConstants;
-use AceLords\Core\Library\Traits\BladeSidebarGenerator;
 
 class ComposerServiceProvider extends ServiceProvider
 {
-    use BladeSidebarGenerator;
-    
     /**
      * Register services.
      *
@@ -34,8 +31,11 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app['blade.compiler']->directive('acelordsSidebar', function ($group) {
-            return $this->generateSidebar(doe());
+        /**
+         * @datetime([Auth::user()->created_at, 'd-m-Y H:i:s'])
+         */
+        $this->app['blade.compiler']->directive('datetime', function ($expression) {
+            return "<?php echo e(localizeDateFormat(" . $expression . ")); ?>";
         });
     }
 }

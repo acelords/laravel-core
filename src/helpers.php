@@ -1,10 +1,10 @@
 <?php
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use AceLords\Core\Repositories\RedisRepository;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Artisan;
+use AceLords\Core\Repositories\RedisRepository;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -614,5 +614,57 @@ if (! function_exists('sizeForHumans'))
             return number_format(($kiloBytes / 1000), 2) . ' MB';
             
         return number_format(($kiloBytes / (1000 * 1000)), 2) . ' GB';
+    }
+}
+
+if (! function_exists('localizeDate'))
+{
+    /**
+     * Convert the given date to the $timezone or logged in users timezone.
+     *
+     * @param mixed $date A Carbon date or a parsable date format.
+     * @param string $timezone A PHP timezone. If null it will use the logged in users timezone.
+     * @return string The localized date.
+     */
+    function localizeDate($date, $timezone = null)
+    {
+        if (!($date instanceof Carbon)) {
+            $date = is_numeric($date) ? Carbon::createFromTimestamp($date) : Carbon::parse($date);
+        }
+
+        return $date->setTimezone($timezone ?? (doe() ? doe()->timezone : 'UTC'));
+    }
+}
+
+if (! function_exists('localizeDateFormat'))
+{
+    /**
+     * Convert the given date to the $timezone or logged in users timezone.
+     * Then format it to the given format.
+     *
+     * @param mixed $date A Carbon date, array of parameters or a parsable date format.
+     * @param string $format A PHP date time format.
+     * @param string $timezone A PHP timezone. If null it will use the logged in users timezone.
+     * @return string The formatted date.
+     */
+    function localizeDateFormat($date, $format = 'jS M Y, g:ia', $timezone = null)
+    {
+        // Support array input as primary arg
+        if (is_array($date) && !empty($date)) {
+
+            // If format exists
+            if (count($date) >= 2) {
+                $format = $date[1];
+            }
+
+            // If timezone exists
+            if (count($date) >= 3) {
+                $timezone = $date[2];
+            }
+
+            $date = $date[0];
+        }
+
+        return localizeDate($date, $timezone)->format($format);
     }
 }
