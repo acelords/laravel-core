@@ -4,6 +4,7 @@ namespace AceLords\Core\Library\RedisConfigurations;
 
 use Illuminate\Support\Facades\DB;
 use AceLords\Core\Library\Contracts\RedisInterface;
+use Illuminate\Support\Facades\Schema;
 
 class Extras extends RedisTemplate implements RedisInterface
 {
@@ -23,6 +24,10 @@ class Extras extends RedisTemplate implements RedisInterface
     {
         $key = str_replace(config('acelords_redis.application_prefix'), '', $key);
 
-        return DB::table("${key}")->get();
+        if(Schema::hasTable("${key}")) {
+            return DB::table("${key}")->get();
+        }
+
+        return collect();
     }
 }

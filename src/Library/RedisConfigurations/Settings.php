@@ -4,6 +4,7 @@ namespace AceLords\Core\Library\RedisConfigurations;
 
 use AceLords\Core\Library\Contracts\RedisInterface;
 use AceLords\Core\Models\Configuration;
+use Illuminate\Support\Facades\Schema;
 
 class Settings extends RedisTemplate implements RedisInterface
 {
@@ -57,6 +58,12 @@ class Settings extends RedisTemplate implements RedisInterface
     */
     public function configurations()
     {
+        $table = (new Configuration())->getTable();
+
+        if(! Schema::hasTable("${$table}")) {
+            return collect();
+        }
+
         $data = $this->settings();
 
         $this->setDefaultConfigurations($data);

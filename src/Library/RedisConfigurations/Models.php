@@ -3,6 +3,7 @@
 namespace AceLords\Core\Library\RedisConfigurations;
 
 use AceLords\Core\Library\Contracts\RedisInterface;
+use Illuminate\Support\Facades\Schema;
 
 class Models extends RedisTemplate implements RedisInterface
 {
@@ -23,13 +24,18 @@ class Models extends RedisTemplate implements RedisInterface
         if(class_exists($key))
         {
             $model = new $key();
-            $dbName = $model->getTable();
-            $data = $model->get()->toArray();
+            $tableName = $model->getTable();
 
-            return [
-                'key' => $dbName,
-                'data' => $data,
-            ];
+            if(Schema::hasTable("${key}")) {
+                $data = $model->get()->toArray();
+
+                return [
+                    'key' => $tableName,
+                    'data' => $data,
+                ];
+            }
+
+            return [];
         }
 
         return collect();
