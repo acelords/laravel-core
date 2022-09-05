@@ -37,6 +37,7 @@ if (! function_exists('core_paginate'))
      * Get paginations for different parts of the System.
      * Opted for function in case the paginations require to be
      * retrieved via a setting instead of config option.
+     * If an integer is provided, its value is returned.
      * 'xs' => 5,
      * 's' => 10,
      * 'm' => 25,
@@ -55,7 +56,7 @@ if (! function_exists('core_paginate'))
             if ($key == strtolower($entity))
                 return (int)$value;
         }
-        return (int)$paginations['p'];
+        return is_numeric($entity) ? $entity : (int)$paginations['p'];
     }
 }
 
