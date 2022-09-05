@@ -8,6 +8,18 @@ use AceLords\Core\Repositories\RedisRepository;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
+
+if(!function_exists('debugOn'))
+{
+    /**
+     * Check if debug mode is activated
+     */
+    function debugOn()
+    {
+        return env('APP_DEBUG');
+    }
+}
+
 if (! function_exists('adjustBrightness'))
 {
     function adjustBrightness($hex, $steps) 
