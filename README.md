@@ -51,6 +51,6 @@ SeoManager::page(strtolower($page))->data();
 - sizeForHumans(int|float $size) : string
 
 ## Credits
-- [AceLords](https://www.acelords.space)
+- [AceLords](https://www.acelords.com)
 - [Lexx YungCarter](mailto:lexxyungcarter@gmail.com)
 - [Github](https://github.com/acelords)
