@@ -37,25 +37,7 @@ class ClearRedis extends Command
      */
     public function handle()
     {
-        // extras
-        foreach(config('acelords_redis.extras') as $key)
-        {
-            if(is_array($key)) {
-                redis()->del($key['table']);
-            } else {
-                redis()->del($key);
-            }
-        }
-
-        // models
-        foreach(config('acelords_redis.models') as $key)
-        {
-            redis()->del($key);
-        }
-
-        // sidebar
-        redis()->del('sidebar');
-        redis()->del('sudo_sidebar');
+        Cache::flush();
 
         $this->info("$key cleared! Refresh the page");
     }
