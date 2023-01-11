@@ -9,22 +9,18 @@
 
 namespace AceLords\Core\Repositories;
 
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 use AceLords\Core\Library\Contracts\RedisInterface;
 
 class RedisRepository
 {
-
-    public $redis, $prefix;
+    public $prefix;
 
     /**
      * Initialize redis
      */
     public function __construct()
     {
-        $r = Redis::connection();
-        $this->redis = $r;
-
         $this->prefix = config('acelords_redis.application_prefix');
     }
 
@@ -36,7 +32,7 @@ class RedisRepository
     {
         $key = $this->prefix . $key;
 
-        return $this->redis->get($key) ? unserialize($this->redis->get($key)) : null;
+        return Cache::get($key) ? unserialize(Cache::get($key)) : null;
     }
 
     /**
@@ -62,7 +58,7 @@ class RedisRepository
 
         if(! $this->exists($key))
         {
-            $this->redis->set($key, serialize($data));
+            Cache::put($key, serialize($data));
         }
 
         return $this;
@@ -84,7 +80,7 @@ class RedisRepository
 
             $this->exists($key) ?: $this->store($contract, $key);
 
-            $data[$key] = unserialize($this->redis->get($key));
+            $data[$key] = unserialize(Cache::get($key));
         }
 
         return count($data) == 1 ? array_first($data) : $data;
@@ -95,7 +91,7 @@ class RedisRepository
      */
     public function reset(RedisInterface $contract, $key)
     {
-        $this->redis->del($key);
+        Cache::forget($key);
 
         $key = $this->prefix . $key;
 
@@ -109,7 +105,7 @@ class RedisRepository
     {
         $key = $this->prefix . $key;
 
-        return $this->redis->exists($key);
+        return Cache::has($key);
     }
 
     /**
@@ -133,7 +129,7 @@ class RedisRepository
             $this->del($key);
         }
 
-        return $this->redis->set($key, $data);
+        return Cache::put($key, $data);
     }
 
     /**
@@ -143,7 +139,7 @@ class RedisRepository
     {
         $key = $this->prefix . $key;
 
-        return $this->redis->del($key);
+        return Cache::forget($key);
     }
 
     /**
