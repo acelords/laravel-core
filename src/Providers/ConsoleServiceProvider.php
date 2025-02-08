@@ -4,7 +4,6 @@ namespace AceLords\Core\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use AceLords\Core\Console\GenerateProductKey;
 use AceLords\Core\Console\TestQueue;
 use AceLords\Core\Console\FixRoles;
 use AceLords\Core\Console\AssetsCommand;
@@ -22,7 +21,6 @@ class ConsoleServiceProvider extends ServiceProvider
      * @var array
     */
     protected $commands = [
-        GenerateProductKey::class,
         TestQueue::class,
         FixRoles::class,
         AssetsCommand::class,
