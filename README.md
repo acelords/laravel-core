@@ -1,5 +1,5 @@
 # AceLords Core Composer Package
-An AceLords core composer package
+An AceLords package for providing core services to AceLrods products
 
 ## Facades
 - SeoManager
